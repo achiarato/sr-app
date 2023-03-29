@@ -4,10 +4,17 @@ import (
 	"fmt"
 	"net/http"
 	"io"
-
+	"encoding/json"
 )
 
 const KeyServerAddr = "serverAddr"
+
+type SRdata struct {
+     Src   string  `json:"src"`
+     Dst   string  `json:"dst"`
+     USid  string  `json:"uSid"`
+     Query string  `json:"Query"`
+}
 
 func GetShortestPathSRuSID(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -27,7 +34,13 @@ func GetShortestPathSRuSID(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "Bad Request missing destination node's address\n")
 	} else {
 		fmt.Printf("%s: got CORRECT /shortestpath request for src '%s' and dst '%s'\n", ctx.Value(KeyServerAddr), src, dst)
-		srt := fmt.Sprintf("uSID for the shortest path between src '%s' and dst '%s' is being calculated\n", src, dst)
-		io.WriteString(w, srt)
+		w.Header().Set("Content-Type", "application/json")
+		srdata := SRdata {
+				  Src: src,
+				  Dst: dst,
+				  USid: "2001",
+				  Query: "Shortest Path",
+				}
+		json.NewEncoder(w).Encode(srdata)
 	}
 }
