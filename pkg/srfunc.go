@@ -16,8 +16,11 @@ type SRdata struct {
      Query string  `json:"Query"`
 }
 
+
+
 func GetShortestPathSRuSID(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	var err error
 
 	src := r.URL.Query().Get("src")
 	dst := r.URL.Query().Get("dst")
@@ -35,6 +38,11 @@ func GetShortestPathSRuSID(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Printf("%s: got CORRECT /shortestpath request for src '%s' and dst '%s'\n", ctx.Value(KeyServerAddr), src, dst)
 		w.Header().Set("Content-Type", "application/json")
+	        err = Newclient()
+	        if err != nil {
+        	        fmt.Printf("New DB Client creation failed: %s\n", err)
+        	}
+
 		srdata := SRdata {
 				  Src: src,
 				  Dst: dst,
