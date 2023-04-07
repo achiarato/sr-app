@@ -21,6 +21,7 @@ type SRdata struct {
 func GetShortestPathSRuSID(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var err error
+	var uSID string
 
 	src := r.URL.Query().Get("src")
 	dst := r.URL.Query().Get("dst")
@@ -38,15 +39,19 @@ func GetShortestPathSRuSID(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Printf("%s: got CORRECT /shortestpath request for src '%s' and dst '%s'\n", ctx.Value(KeyServerAddr), src, dst)
 		w.Header().Set("Content-Type", "application/json")
-	        err = Newclient()
+		err, uSID = ArangoDBQuery(ctx, src, dst, "Shortest Path")
 	        if err != nil {
-        	        fmt.Printf("New DB Client creation failed: %s\n", err)
+        	        fmt.Printf("Arango DB Query Failed: %s\n", err)
         	}
+
+		if uSID == "" {
+			fmt.Printf("No uSID created. Please double check the query type")
+		}
 
 		srdata := SRdata {
 				  Src: src,
 				  Dst: dst,
-				  USid: "2001",
+				  USid: uSID,
 				  Query: "Shortest Path",
 				}
 		json.NewEncoder(w).Encode(srdata)
