@@ -82,7 +82,7 @@ func ArangoDBQuery(ctx context.Context, src string, dst string, query string) (e
 			split = strings.Split(s.Srv6Sid, ":")
 			uSID += ":" + split[2]
       		}
-		fmt.Printf("uSID: %s", uSID)
+		fmt.Printf("uSID: %s\n", uSID)
 	return nil, uSID
 	} else {
 		//err = "No query to the Arango DB. Please double check query input"
