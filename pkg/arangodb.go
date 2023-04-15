@@ -76,7 +76,7 @@ func ArangoDBQuery(ctx context.Context, src string, dst string, query string) (e
 		for i, s :=range docs {
               		if i == 0 {
 	      			split := strings.Split(s.Srv6Sid, ":")
-				uSID = split[0] + ":" + split[1]
+				uSID = split[0] + "::" + split[1]
 			}
 			fmt.Printf("Sid: %s %T\n", s.Srv6Sid, s.Srv6Sid)
 			split = strings.Split(s.Srv6Sid, ":")
